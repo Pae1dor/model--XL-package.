@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+	<!--form view-->
+	<record id="view_dev_material_request_form" model="ir.ui.view">
+		<field name="name">view.dev.material.request.form</field>
+		<field name="model">dev.material.request</field>
+		<field name="arch" type="xml">
+		    <form string="Material Request">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,department_approval,approved,received"/>
+
+<button name="action_confirm" string="Confirm" type="object" class="btn btn-primary"
+        modifiers='{"invisible": [["state", "!=", "draft"]]}'/>
+
+<button name="action_department_approval" string="Department Approval" type="object" class="btn btn-secondary"
+        modifiers='{"invisible": ["|", ["state", "!=", "confirm"], ["is_department_manager", "=", false]]}'/>
+
+<button name="action_approved" string="Approved" type="object" class="btn btn-success"
+        groups="dev_material_purchase_requisitions.group_purchase_requisition_manager"
+        modifiers='{"invisible": [["state", "!=", "department_approval"]]}'/>
+
+<button name="action_create_purchase" string="Create PO and Picking" type="object" class="btn btn-info"
+        modifiers='{"invisible": ["|", ["state", "!=", "approved"], ["is_create_po", "=", true]]}'/>
+
+<button name="action_receive" string="Received" type="object" class="btn btn-success"
+        modifiers='{"invisible": ["|", ["state", "!=", "approved"], ["is_create_po", "=", false]]}'/>
+
+<button name="action_draft" string="Set to Draft" type="object" class="btn btn-warning"
+        modifiers='{"invisible": [["state", "not in", ["confirm", "department_approval", "reject"]]]}'/>
+
+<button name="%(dev_material_purchase_requisitions.action_reject_material_request_reason)d" string="Reject"
+        type="action" class="btn btn-danger"
+        modifiers='{"invisible": [["state", "not in", ["confirm", "department_approval"]]]}'/>
+
+                </header>
+ <sheet>
+    <div class="oe_button_box" name="button_box">
+        <button class="oe_stat_button" name="view_purchase_orders" type="object" icon="fa-shopping-cart" help="Purchase"
+                modifiers='{"invisible": [["purchase_count", "=", 0]]}'>
+            <field string="Purchase" name="purchase_count" widget="statinfo"/>
+        </button>
+
+        <button class="oe_stat_button" name="view_internal_picking" type="object" icon="fa-truck" help="Purchase"
+                modifiers='{"invisible": [["picking_count", "=", 0]]}'>
+            <field string="Transfer" name="picking_count" widget="statinfo"/>
+        </button>
+    </div>
+
+    <h1 class="hidden-xs">
+        <field name="name" readonly="1"/>
+    </h1>
+
+    <group>
+        <group>
+            <field name="employee_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+            <field name="department_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+            <field name="department_manager_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+            <field name="is_department_manager" modifiers='{"invisible": true}'/>
+            <field name="is_create_po" modifiers='{"invisible": true}'/>
+            <field name="purchase_ids" widget="many2many_tags" modifiers='{"invisible": true}'/>
+            <field name="internal_id" modifiers='{"invisible": true}'/>
+        </group>
+
+        <group>
+            <field name="date" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+            <field name="receive_date" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+        </group>
+    </group>
+
+    <notebook>
+        <page name="product_line" string="Product Lines">
+            <field name="product_lines">
+                <tree editable="bottom">
+                    <field name="action"
+                           modifiers='{"column_invisible": [["parent.state", "=", "draft"]], "required": [["parent.state", "!=", "draft"]]}'/>
+
+                    <field name="product_id"
+                           options="{'no_create': True, 'no_quick_create': True, 'no_open': True, 'no_create_edit': True}"
+                           modifiers='{"required": true, "readonly": [["parent.state", "!=", "draft"]]}'/>
+<!--                    projdct_detail -->
+                     <field name="analytic_distribution" widget="analytic_distribution"/>
+
+                    <field name="name"
+                           modifiers='{"required": true, "readonly": [["parent.state", "!=", "draft"]]}'/>
+
+                    <field name="quantity"
+                           modifiers='{"readonly": [["parent.state", "!=", "draft"]]}'/>
+
+                    <field name="uom_id"
+                           options="{'no_create': True, 'no_quick_create': True, 'no_open': True, 'no_create_edit': True}"
+                           modifiers='{"required": true, "readonly": [["parent.state", "!=", "draft"]]}'/>
+
+                    <field name="vendor_id"
+                           modifiers='{"column_invisible": [["parent.state", "=", "draft"]],
+                                       "required": [["parent.state", "!=", "draft"], ["action", "=", "purchase"]]}'/>
+                </tree>
+            </field>
+        </page>
+
+        <page string="Picking Details">
+            <group>
+                <group>
+                    <field name="source_location_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+                    <field name="destination_location_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+                </group>
+                <group>
+                    <field name="deliver_to" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+                    <field name="internal_picking_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+                </group>
+            </group>
+        </page>
+
+        <page name="other_detail" string="Other Details">
+            <group>
+                <group>
+                    <field name="user_id" readonly="1"/>
+                </group>
+                <group>
+                    <field name="company_id" modifiers='{"required": true, "readonly": [["state", "!=", "draft"]]}'/>
+                </group>
+            </group>
+        </page>
+
+        <page name="log_detail" string="Logs">
+            <group>
+                <group>
+                    <field name="confirm_by" readonly="1"/>
+                    <field name="dep_approval_id" readonly="1"/>
+                    <field name="approved_by" readonly="1"/>
+                    <field name="reject_by" readonly="1"/>
+                </group>
+                <group>
+                    <field name="confirm_date" readonly="1"/>
+                    <field name="dep_approval_date" readonly="1"/>
+                    <field name="approved_date" readonly="1"/>
+                    <field name="reject_date" readonly="1"/>
+                </group>
+            </group>
+        </page>
+
+        <page name="reject_reason" string="Reject Reason"
+              modifiers='{"invisible": [["state", "!=", "reject"]]}' >
+            <field name="reject_reason" readonly="1"/>
+        </page>
+    </notebook>
+
+    <field name="notes" placeholder="notes goes here . . ."
+           modifiers='{"readonly": [["state", "!=", "draft"]]}'/>
+</sheet>
+
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+		</field>
+	</record>
+
+	<!--tree view-->
+	<record id="view_dev_material_request_tree" model="ir.ui.view">
+		<field name="name">view.dev.material.request.tree</field>
+		<field name="model">dev.material.request</field>
+		<field name="arch" type="xml">
+		    <tree string="Material Request">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id" optional="hide"/>
+                <field name="date"/>
+                <field name="user_id"/>
+                <field name="company_id"/>
+                <field name="state"/>
+            </tree>
+		</field>
+	</record>
+
+	<!--search view-->
+    <record id="view_dev_material_request_filter" model="ir.ui.view">
+        <field name="name">view.dev.material.request.filter</field>
+        <field name="model">dev.material.request</field>
+        <field name="arch" type="xml">
+            <search string="Material Request Filter">
+                <field name="employee_id"/>
+                <field name="user_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]"/>
+                <filter string="Department Approval" name="department_approval" domain="[('state','=','department_approval')]"/>
+                <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                <filter string="Received" name="received" domain="[('state','=','received')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="state" string="State" context="{'group_by':'state'}"/>
+		         	<filter name="employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
+		         	<filter name="user_id" string="Responsible" context="{'group_by':'user_id'}"/>
+		         	<filter name="company_id" string="Company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--Action-->
+	<record id="action_material_requat" model="ir.actions.act_window">
+        <field name="name">Purchase Requisitions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dev.material.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!--Menus-->
+ 	<menuitem name ="Purchase Requisitions"
+              id="main_menu_purchase_requisitions"
+              sequence="10"   web_icon="dev_material_purchase_requisitions,static/description/icon.png"/>
+              
+              
+ 	<menuitem name ="Purchase Requisition"
+              id="menu_purchase_requistion"
+              parent="main_menu_purchase_requisitions"
+              sequence="0"/>
+    
+    <menuitem name ="Purchase Requisition"
+              id="menu_material_request"
+              parent="menu_purchase_requistion"
+              action="action_material_requat"
+              sequence="0"/>          
+    
+</odoo>

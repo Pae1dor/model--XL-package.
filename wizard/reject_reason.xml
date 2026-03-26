@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+        <record id="view_reject_material_request_reason_form" model="ir.ui.view">
+            <field name="name">Reject Material Reject Reason</field>
+            <field name="model">reject.material.request.reason</field>
+            <field name="arch" type="xml">
+                <form string="Reject Reason">
+                	<field name="reason"/>
+                    <footer>
+                        <button name="action_reject" string="Reject" type="object" class="btn-primary"/> or 
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_reject_material_request_reason" model="ir.actions.act_window">
+            <field name="name">Reject Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reject.material.request.reason</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

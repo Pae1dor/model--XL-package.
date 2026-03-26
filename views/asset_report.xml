@@ -1,0 +1,169 @@
+<odoo>
+<!-- Odoo XML Configuration for Asset Management Reporting -->
+
+<!-- Chart Views -->
+
+    <!-- Asset Types Distribution Chart -->
+	<record id="asset_type_chart" model="ir.ui.view">
+        <field name="name">asset.type.chart</field>
+        <field name="model">asset.management</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Types Distribution" type="pie">
+                <field name="asset_type_id" type="dimension"/>
+                <field name="name" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Asset Status Overview Chart -->
+    <record id="asset_status_chart" model="ir.ui.view">
+        <field name="name">asset.status.chart</field>
+        <field name="model">asset.management</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Status Overview" type="bar">
+                <field name="status" type="dimension"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Assets Transfer Wise Chart -->
+    <record id="asset_transfer_chart" model="ir.ui.view">
+        <field name="name">asset.transfer.entry.chart</field>
+        <field name="model">asset.transfer.entry</field>
+        <field name="arch" type="xml">
+            <graph string="Assets Transfer Wise" type="line">
+                <field name="assign_date" type="dimension"/>
+                <field name="asset_id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Maintenance and Repair Costs Over Time Chart -->
+    <record id="maintenance_repair_chart" model="ir.ui.view">
+        <field name="name">asset.maintenance.entry.chart</field>
+        <field name="model">asset.maintenance.entry</field>
+        <field name="arch" type="xml">
+            <graph string="Maintenance and Repair Costs Over Time" type="line">
+                <field name="maintenance_amount" type="measure"/>
+                <field name="assign_date" type="dimension"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Asset Depreciation Over Time Chart -->
+    <record id="asset_depreciation_chart" model="ir.ui.view">
+        <field name="name">asset.depreciation.chart</field>
+        <field name="model">asset.depreciation.entry</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Depreciation Over Time" type="bar">
+                <field name="depreciation_amount" type="measure"/>
+                <field name="entry_date" type="dimension"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action Windows for Charts -->
+    <record id="assets_distribution_by_vendor_chart" model="ir.ui.view">
+        <field name="name">assets.distribution.by.vendor.chart</field>
+        <field name="model">asset.management</field>
+        <field name="arch" type="xml">
+            <graph string="Vendor Distribution of Assets" type="pie">
+                <field name="vendor_id" type="dimension"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action for Assets Type Graph -->
+    <record id="action_assets_graph" model="ir.actions.act_window">
+        <field name="name">Assets Type Graph</field>
+        <field name="res_model">asset.management</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="asset_type_chart"/>
+    </record>
+
+    <!-- Action for Assets Status Graph -->
+    <record id="action_assets_status_graph" model="ir.actions.act_window">
+        <field name="name">Assets Status Graph</field>
+        <field name="res_model">asset.management</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="asset_status_chart"/>
+    </record>
+
+    <!-- Action for Assets By Vendor Graph -->
+    <record id="action_assets_vendor_graph" model="ir.actions.act_window">
+        <field name="name">Assets By Vendor Graph</field>
+        <field name="res_model">asset.management</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="assets_distribution_by_vendor_chart"/>
+    </record>
+
+    <!-- Action for Assets Transfer Graph -->
+    <record id="action_assets_transfer_graph" model="ir.actions.act_window">
+        <field name="name">Assets Transfer Graph</field>
+        <field name="res_model">asset.transfer.entry</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="asset_transfer_chart"/>
+    </record>
+
+    <!-- Action for Assets Maintenance Graph -->
+    <record id="action_assets_maintenance_graph" model="ir.actions.act_window">
+        <field name="name">Assets Maintenance Graph</field>
+        <field name="res_model">asset.maintenance.entry</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="maintenance_repair_chart"/>
+    </record>
+
+    <!-- Action for Assets Depreciation Graph -->
+    <record id="action_assets_depreciation_graph" model="ir.actions.act_window">
+        <field name="name">Assets Depreciation Graph</field>
+        <field name="res_model">asset.depreciation.entry</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="asset_depreciation_chart"/>
+    </record>
+
+    <!-- Reporting Sub-menus -->
+    <menuitem id="menu_asset_reporting"
+              name="Reporting"
+              parent="menu_asset_root"
+              groups="reporting_admin_group,base.group_system"
+              sequence="70"/>
+
+    <!-- Each sub-menu links to a specific chart action -->
+    <menuitem id="menu_asset_type_graph"
+              name="Asset Type"
+              parent="menu_asset_reporting"
+              action="action_assets_graph"
+              sequence="10"/>
+
+    <menuitem id="menu_asset_vendor_graph"
+              name="Asset By Vendor"
+              parent="menu_asset_reporting"
+              action="action_assets_vendor_graph"
+              sequence="20"/>
+
+    <menuitem id="menu_asset_status_graph"
+              name="Asset By status"
+              parent="menu_asset_reporting"
+              action="action_assets_status_graph"
+              sequence="30"/>
+
+    <menuitem id="menu_asset_transfer_graph"
+              name="Asset Transfer"
+              parent="menu_asset_reporting"
+              action="action_assets_transfer_graph"
+              sequence="40"/>
+
+    <menuitem id="menu_asset_maintenance_graph"
+              name="Asset Maintenance"
+              parent="menu_asset_reporting"
+              action="action_assets_maintenance_graph"
+              sequence="50"/>
+
+    <menuitem id="menu_assets_depreciation_graph"
+              name="Asset Depreciation"
+              parent="menu_asset_reporting"
+              action="action_assets_depreciation_graph"
+              sequence="60"/>
+</odoo>

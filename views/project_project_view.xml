@@ -1,0 +1,33 @@
+<odoo>
+    <!-- Inherit Project Form View -->
+    <record id="view_project_form_inherit_sale_relation" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.sale.relation</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='tag_ids']" position="after">
+<!--                <field name="sale_order_id"/>-->
+                <field name="sale_order_id"  />
+            </xpath>
+            <!-- แท็บสำหรับแสดง Sale Order ที่เชื่อม -->
+            <xpath expr="//sheet" position="inside">
+    <group>
+
+        <field name="description"/>
+    </group>
+</xpath>
+
+
+
+        </field>
+    </record>
+
+<!--    <record id="action_project_create_from_sale_order" model="ir.actions.act_window">-->
+<!--    <field name="name">Create Project</field>-->
+<!--    <field name="res_model">project.project</field>-->
+<!--    <field name="view_mode">form</field>-->
+<!--    <field name="context">{'default_sale_order_id': active_id}</field>-->
+<!--    </record>-->
+</odoo>
+
+

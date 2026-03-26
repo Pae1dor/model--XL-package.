@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View for Asset Vendor -->
+    <record id="view_asset_vendor_form" model="ir.ui.view">
+        <!-- Defines the form view for the asset.vendor model -->
+        <field name="name">asset.vendor.form</field>
+        <field name="model">asset.vendor</field>
+        <field name="arch" type="xml">
+            <form string="Asset Vendor">
+                <sheet>
+                    <!-- Organizes fields into groups for better layout -->
+                    <group>
+                        <!-- Vendor Profile group -->
+                        <group string="Vendor Profile">
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="location"/>
+                        </group>
+                        <!-- Contact Information group -->
+                        <group string="Contact Information">
+                            <field name="seller"/>
+                            <field name="contact_phone"/>
+                            <field name="contact_email"/>
+                        </group>
+                        <!-- Service Capabilities group -->
+                        <group string="Service Capabilities">
+                            <field name="repair_service"/>
+                            <field name="maintenance_service"/>
+                            <field name="additional_services"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for Asset Vendor -->
+    <record id="view_asset_vendor_tree" model="ir.ui.view">
+        <!-- Defines the tree (list) view for the asset.vendor model -->
+        <field name="name">asset.vendor.tree</field>
+        <field name="model">asset.vendor</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Vendors">
+                <!-- Specifies fields to be displayed in the list view -->
+                <field name="name"/>
+                <field name="address"/>
+                <field name="location"/>
+                <field name="seller"/>
+                <field name="repair_service"/>
+                <field name="maintenance_service"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for Asset Vendor -->
+    <record id="action_asset_vendor" model="ir.actions.act_window">
+        <!-- Defines the action for opening the asset.vendor views -->
+        <field name="name">Vendors</field>
+        <field name="res_model">asset.vendor</field>
+        <field name="view_mode">tree,form</field>
+        <!-- Help message when no records exist -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Record
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item for Asset Vendor -->
+    <menuitem id="menu_asset_vendor_root"
+              name="Vendors"
+              groups="vendor_user_group,vendor_admin_group,base.group_system"
+              parent="menu_asset_root"
+              action="action_asset_vendor"
+              sequence="20"/>
+
+</odoo>

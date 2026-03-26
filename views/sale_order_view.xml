@@ -1,0 +1,22 @@
+<odoo>
+  <record id="view_sale_order_form_inherit_project_button" model="ir.ui.view">
+    <field name="name">sale.order.form.inherit.project.button</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+      <header>
+                <!-- ซ่อน field project_id แต่ต้องอยู่ใน view เพื่อให้ modifiers ทำงาน -->
+                <field name="project_id" readonly="True"/>
+                <button name="action_create_project"
+                        type="object"
+                        string="Create Project"
+                        icon="fa-rocket"
+                        class="btn-secondary"
+                        modifiers='{"invisible": [["project_id", "!=", false]]}'/>
+
+      </header>
+
+
+    </field>
+  </record>
+</odoo>
